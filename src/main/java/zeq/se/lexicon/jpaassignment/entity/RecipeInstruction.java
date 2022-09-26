@@ -1,24 +1,24 @@
 package zeq.se.lexicon.jpaassignment.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Objects;
-import java.util.UUID;
 
 @Entity
 public class RecipeInstruction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private String id;
+    @Column(name = "instruction_id")
+    private Integer id;
+
+    @Column(name = "instructions" ,length = 1500)
+
     private String instruction;
 
     public RecipeInstruction() {
     }
 
-    public RecipeInstruction(String id, String instruction) {
+    public RecipeInstruction(Integer id, String instruction) {
         this.id = id;
         this.instruction = instruction;
     }
@@ -27,11 +27,11 @@ public class RecipeInstruction {
         this.instruction = instruction;
     }
 
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

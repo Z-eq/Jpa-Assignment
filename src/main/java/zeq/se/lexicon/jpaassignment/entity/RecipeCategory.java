@@ -12,8 +12,9 @@ public class RecipeCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 
-    private int id;
-    @Column(name = "category")
+@Column(name = "recipe_category_id")
+    private Integer id;
+    //@Column(name = "category")
     private String category;
     @ManyToMany(mappedBy = "categories", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     private Set<Recipe> recipe = new HashSet<>();

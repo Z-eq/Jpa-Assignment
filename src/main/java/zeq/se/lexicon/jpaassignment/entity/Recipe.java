@@ -4,42 +4,55 @@ import javax.persistence.*;
 import java.util.*;
 
 
+// mappedBy "recipe" problem måste kolla om !
+
 @Entity
 @Table(name = "Recipe")
+
 public class Recipe {
 @Id
 @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+@Column(name = "recipe_id")
+    private Integer id;
+@Column(name = "recipe_name")
     private String recipeName;
-    
-    @OneToMany
-    private List<RecipeIngredient> recipeIngredients;
+
+    @OneToMany( mappedBy = "recipe" , cascade =  {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH,CascadeType.DETACH})
+
+    private List<RecipeIngredient> recipeIngredients = new ArrayList<>();
+
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "recipe_instruction")
+
+   @JoinColumn(name = "recipe_instruction")
     private RecipeInstruction recipeInstruction;
 
     /** NOt sure if this is right yet!!!!!*//////////////////////////////
 
-    @ManyToMany
-    @JoinTable(name = "recipe_categories"
-            , joinColumns = @JoinColumn(name = "recipe_id")
-            , inverseJoinColumns = @JoinColumn(name = "categories_id" ))
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+    @JoinTable(name = "recipe_recipe_category",
+            joinColumns = @JoinColumn(name = "recipe_id"),
+            inverseJoinColumns = @JoinColumn(name = "recipe_category_id"))
+    private Set<RecipeCategory> categories = new HashSet<>();
 
-    private Set<RecipeCategory> categories;
-
-                        /******* Not sure about above*/
     public Recipe() {
     }
 
-    public Recipe(int id, String recipeName, List<RecipeIngredient> recipeIngredients, RecipeInstruction recipeInstruction, Set<RecipeCategory> categories) {
+    /******* Not sure about above*/
+
+
+    public Recipe(Integer id) {
         this.id = id;
-        this.recipeName = recipeName;
-        this.recipeIngredients = recipeIngredients;
-        this.recipeInstruction = recipeInstruction;
-        this.categories = categories;
     }
 
-    public Recipe(String recipeName, List<RecipeIngredient> recipeIngredients, RecipeInstruction recipeInstruction, Set<RecipeCategory> categories) {
+    public Recipe(Integer id, String recipeName, RecipeInstruction recipeInstruction) {
+        this.id = id;
+
+        this.recipeName = recipeName;
+        this.recipeInstruction = recipeInstruction;
+    }
+
+    public Recipe(Integer id, String recipeName, List<RecipeIngredient> recipeIngredients, RecipeInstruction recipeInstruction, Set<RecipeCategory> categories) {
+        this.id = id;
         this.recipeName = recipeName;
         this.recipeIngredients = recipeIngredients;
         this.recipeInstruction = recipeInstruction;
@@ -48,10 +61,6 @@ public class Recipe {
 
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getRecipeName() {
@@ -91,12 +100,12 @@ public class Recipe {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Recipe recipe = (Recipe) o;
-        return Objects.equals(getRecipeName(), recipe.getRecipeName()) && Objects.equals(getRecipeIngredients(), recipe.getRecipeIngredients()) && Objects.equals(getRecipeInstruction(), recipe.getRecipeInstruction()) && Objects.equals(getCategories(), recipe.getCategories());
+        return getId() == recipe.getId() && Objects.equals(getRecipeName(), recipe.getRecipeName());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getRecipeName(), getRecipeIngredients(), getRecipeInstruction(), getCategories());
+        return Objects.hash(getId(), getRecipeName());
     }
 
     @Override
@@ -104,9 +113,7 @@ public class Recipe {
         return "Recipe{" +
                 "id=" + id +
                 ", recipeName='" + recipeName + '\'' +
-                ", recipeIngredients=" + recipeIngredients +
                 ", recipeInstruction=" + recipeInstruction +
-                ", categories=" + categories +
                 '}';
     }
 }
