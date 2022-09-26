@@ -1,11 +1,9 @@
 package zeq.se.lexicon.jpaassignment.entity;
 
 public enum Measurement {
-    ;
-
-    Measurement() {
 
 
+    CUP, TBSP, TSP,G,HG,KG,ML,CL,DL
 
     }
-}
+
