@@ -1,7 +1,11 @@
 package zeq.se.lexicon.jpaassignment.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.CrudRepository;
 import zeq.se.lexicon.jpaassignment.entity.RecipeCategory;
 
-public interface RecipeCategoryRepository extends JpaRepository<RecipeCategory, Integer> {
+import java.util.List;
+
+public interface RecipeCategoryRepository extends CrudRepository<RecipeCategory, Integer> {
 }
+
