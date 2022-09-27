@@ -1,10 +1,9 @@
 package zeq.se.lexicon.jpaassignment.entity;
 
+import jdk.jfr.Category;
+
 import javax.persistence.*;
 import java.util.*;
-
-
-// mappedBy "recipe" problem måste kolla om !
 
 @Entity
 @Table(name = "Recipe")
@@ -28,7 +27,7 @@ public class Recipe {
 
     /** NOt sure if this is right yet!!!!!*//////////////////////////////
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH, CascadeType.REMOVE})
     @JoinTable(name = "recipe_recipe_category",
             joinColumns = @JoinColumn(name = "recipe_id"),
             inverseJoinColumns = @JoinColumn(name = "recipe_category_id"))
@@ -44,15 +43,12 @@ public class Recipe {
         this.id = id;
     }
 
-    public Recipe(Integer id, String recipeName, RecipeInstruction recipeInstruction) {
-        this.id = id;
-
+    public Recipe(String recipeName, RecipeInstruction recipeInstruction) {
         this.recipeName = recipeName;
         this.recipeInstruction = recipeInstruction;
     }
 
-    public Recipe(Integer id, String recipeName, List<RecipeIngredient> recipeIngredients, RecipeInstruction recipeInstruction, Set<RecipeCategory> categories) {
-        this.id = id;
+    public Recipe(String recipeName, List<RecipeIngredient> recipeIngredients, RecipeInstruction recipeInstruction, Set<RecipeCategory> categories) {
         this.recipeName = recipeName;
         this.recipeIngredients = recipeIngredients;
         this.recipeInstruction = recipeInstruction;
@@ -89,6 +85,32 @@ public class Recipe {
 
     public Set<RecipeCategory> getCategories() {
         return categories;
+    }
+
+    public void addCategory( RecipeCategory recipeCategory) {
+
+        if (recipeCategory == null) throw new IllegalArgumentException("Category is null");
+
+        /*********** Add ************************/
+        if (categories == null) categories = new HashSet<>();
+
+        if (!categories.contains(recipeCategory))
+            recipeCategory.getRecipes().add(this);
+        categories.add(recipeCategory);
+    }
+
+    public void removeCategory( RecipeCategory recipeCategory){
+
+        if(recipeCategory == null) throw new IllegalArgumentException("Category is null");
+
+        /*********** Add ************************/
+        if(categories == null) categories = new HashSet<>();
+
+        if(categories.contains(recipeCategory))
+            recipeCategory.getRecipes().remove(this);
+        categories.remove(recipeCategory);
+
+
     }
 
     public void setCategories(Set<RecipeCategory> categories) {

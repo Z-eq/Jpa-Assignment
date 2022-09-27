@@ -14,12 +14,14 @@ public class RecipeIngredient {
     @Column(name = "recipe_ingredient_id")
 
     private Integer id;
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
-    @JoinColumn(name = "ingredient_id")
+    @ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH} , fetch = FetchType.EAGER)
+   // @JoinColumn( name = "ingredient_id")
     private Ingredient ingredient;
 
     // @Column(name=  "amount")
     private double amount;
+
+
     @Enumerated(EnumType.STRING)
     private Measurement measurement;
 

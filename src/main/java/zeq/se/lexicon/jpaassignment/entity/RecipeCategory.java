@@ -28,8 +28,6 @@ public class RecipeCategory {
         this.recipes = recipes;
     }
 
-    public RecipeCategory(String vegetarian, String recipies) {
-    }
 
     public Integer getId() {
         return id;
