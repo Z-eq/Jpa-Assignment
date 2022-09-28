@@ -49,18 +49,11 @@ public class RecipeCategory {
         return recipes;
     }
 
-    // toDO ******************************************
 
-    public void setRecipes(Set<Recipe> recipes) {
-        this.recipes = recipes;
-    }
-
-    //toDO *******************************************
+    /*******************************************/
     public void addRecipe(Recipe recipe){
 
         if(recipe == null) throw new IllegalArgumentException("This recipe is null");
-
-        /*********** Add ************************/
         if(recipes == null) recipes = new HashSet<>();
 
         if(!recipes.contains(recipe))
@@ -68,19 +61,20 @@ public class RecipeCategory {
             recipes.add(recipe);
 
     }
-
     /**** Remove ***/
     public void removeRecipe(Recipe recipe) {
 
         if (recipe == null) throw new IllegalArgumentException("Recipe already in exists in db");
-        if (recipes == null) setRecipes(new HashSet<>());
+        if (recipes == null) recipes(new HashSet<>());
 
         if(recipes.contains(recipe)) {
             recipe.getCategories().remove(this);
             recipes.remove(recipe);
         }
     }
-
+                /****/
+    private void recipes(HashSet<Object> objects) {
+    }
 
     @Override
     public boolean equals(Object o) {

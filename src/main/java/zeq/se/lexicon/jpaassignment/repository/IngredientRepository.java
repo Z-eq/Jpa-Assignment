@@ -14,18 +14,22 @@ import java.util.Optional;
 
 public interface IngredientRepository extends JpaRepository<Ingredient, Integer> {
 
-           //Update ingredient by name!
+                    /** Update ingredient by name! **/
     @Transactional
     @Modifying
     @Query("update Ingredient i set i.ingredientName = ?1 where upper(i.ingredientName) = upper(?2)")
     int updateIngredientNameByIngredientNameAllIgnoreCase(String ingredientName, String ingredientName1);
   
-
+                    /** Delete by name **/
     List<Ingredient> deleteByIngredientName(String ingredientName);
     @Query("select i from Ingredient i where upper(i.ingredientName) = upper(?1)")
     List<Ingredient> findByIngredientNameIgnoreCase(String ingredientName);
 
-    Optional<Ingredient> findByIngredientNameContainingIgnoreCase(String ingredientName);
+                    /** Find by contains **/
+
+    List<Ingredient> findByIngredientNameContainingIgnoreCase(String ingredientName);
+
+
 
 
     

@@ -1,7 +1,5 @@
 package zeq.se.lexicon.jpaassignment.entity;
 
-import jdk.jfr.Category;
-
 import javax.persistence.*;
 import java.util.*;
 
@@ -33,8 +31,7 @@ public class Recipe {
             inverseJoinColumns = @JoinColumn(name = "recipe_category_id"))
     private Set<RecipeCategory> categories = new HashSet<>();
 
-    public Recipe() {
-    }
+
 
     /******* Not sure about above*/
 
@@ -53,6 +50,10 @@ public class Recipe {
         this.recipeIngredients = recipeIngredients;
         this.recipeInstruction = recipeInstruction;
         this.categories = categories;
+    }
+
+    public Recipe() {
+
     }
 
     public int getId() {
