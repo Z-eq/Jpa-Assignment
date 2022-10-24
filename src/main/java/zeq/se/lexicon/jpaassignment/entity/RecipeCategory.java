@@ -7,27 +7,34 @@ import java.util.Set;
 
 @Entity
 
-//@Table(name = "Recipecategory")
 public class RecipeCategory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 
-    @Column(name = "recipe_category_id")
     private Integer id;
     //@Column(name = "category")
     private String category;
     @ManyToMany(mappedBy = "categories", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
-    private Set<Recipe> recipes = new HashSet<>();
+   Set<Recipe> recipes = new HashSet<>();
 
     public RecipeCategory() {
+    }
+
+    public RecipeCategory(String category) {
+        this.category = category;
+    }
+
+    public RecipeCategory(Integer id, String category, Set<Recipe> recipes) {
+        this.id = id;
+        this.category = category;
+        this.recipes = recipes;
     }
 
     public RecipeCategory(String category, Set<Recipe> recipes) {
         this.category = category;
         this.recipes = recipes;
     }
-
 
     public Integer getId() {
         return id;
@@ -41,8 +48,9 @@ public class RecipeCategory {
         return category;
     }
 
-    public void setCategory(String category) {
+    public RecipeCategory setCategory(String category) {
         this.category = category;
+        return null;
     }
 
     public Set<Recipe> getRecipes() {
@@ -51,27 +59,19 @@ public class RecipeCategory {
 
 
     /*******************************************/
-    public void addRecipe(Recipe recipe){
 
-        if(recipe == null) throw new IllegalArgumentException("This recipe is null");
-        if(recipes == null) recipes = new HashSet<>();
+        public void addRecipe(Recipe recipe) {
+            if (!recipes.contains(recipe)) {
+                recipes.add(recipe);
 
-        if(!recipes.contains(recipe))
-            recipe.getCategories().add(this);
-            recipes.add(recipe);
-
-    }
-    /**** Remove ***/
-    public void removeRecipe(Recipe recipe) {
-
-        if (recipe == null) throw new IllegalArgumentException("Recipe already in exists in db");
-        if (recipes == null) recipes(new HashSet<>());
-
-        if(recipes.contains(recipe)) {
-            recipe.getCategories().remove(this);
-            recipes.remove(recipe);
+            }
         }
-    }
+    /**** Remove ***/
+         public void removeRecipe(Recipe recipe) {
+             if (recipes.contains(recipe)) {
+                 recipes.remove(recipe);
+             }
+         }
                 /****/
     private void recipes(HashSet<Object> objects) {
     }

@@ -1,5 +1,8 @@
 package zeq.se.lexicon.jpaassignment.entity;
 
+
+import zeq.se.lexicon.jpaassignment.repository.IngredientRepository;
+
 import javax.persistence.*;
 import java.util.*;
 
@@ -7,42 +10,49 @@ import java.util.*;
 @Table(name = "Recipe")
 
 public class Recipe {
-@Id
-@GeneratedValue(strategy = GenerationType.IDENTITY)
-@Column(name = "recipe_id")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "recipe_id")
     private Integer id;
-@Column(name = "recipe_name")
+    @Column(name = "recipe_name", unique = true)
     private String recipeName;
 
-    @OneToMany( mappedBy = "recipe" , cascade =  {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH,CascadeType.DETACH})
+    @OneToMany(mappedBy = "recipe", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
 
-    private List<RecipeIngredient> recipeIngredients = new ArrayList<>();
+    private List<RecipeIngredient> recipeIngredients;
 
     @OneToOne(cascade = CascadeType.ALL)
-
-   @JoinColumn(name = "recipe_instruction")
+    @JoinColumn(name = "recipe_instruction")
     private RecipeInstruction recipeInstruction;
 
-    /** NOt sure if this is right yet!!!!!*//////////////////////////////
-
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH, CascadeType.REMOVE})
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "recipe_recipe_category",
             joinColumns = @JoinColumn(name = "recipe_id"),
             inverseJoinColumns = @JoinColumn(name = "recipe_category_id"))
-    private Set<RecipeCategory> categories = new HashSet<>();
+    private Set<RecipeCategory> categories;
 
+    public Recipe() {
+    }
 
-
-    /******* Not sure about above*/
-
-
-    public Recipe(Integer id) {
-        this.id = id;
+    public Recipe(String recipeName) {
+        this.recipeName = recipeName;
     }
 
     public Recipe(String recipeName, RecipeInstruction recipeInstruction) {
         this.recipeName = recipeName;
         this.recipeInstruction = recipeInstruction;
+    }
+
+    public Recipe(String recipeName, List<RecipeIngredient> recipeIngredients, RecipeInstruction recipeInstruction) {
+        this.recipeName = recipeName;
+        this.recipeIngredients = recipeIngredients;
+        this.recipeInstruction = recipeInstruction;
+    }
+
+    public Recipe(String recipeName, RecipeInstruction recipeInstruction, Set<RecipeCategory> categories) {
+        this.recipeName = recipeName;
+        this.recipeInstruction = recipeInstruction;
+        this.categories = categories;
     }
 
     public Recipe(String recipeName, List<RecipeIngredient> recipeIngredients, RecipeInstruction recipeInstruction, Set<RecipeCategory> categories) {
@@ -52,12 +62,26 @@ public class Recipe {
         this.categories = categories;
     }
 
-    public Recipe() {
-
+    public void addRecipeIngredient(RecipeIngredient recipeIngredient ){
+        if(recipeIngredient== null) throw new IllegalArgumentException("Recipe Ingredient is null");
+        if(recipeIngredients== null) recipeIngredients= new ArrayList<>();
+        recipeIngredients.add(recipeIngredient);
+        recipeIngredient.setRecipe(this);
+    }
+    public void removeRecipeIngredient(RecipeIngredient recipeIngredient){
+        if(recipeIngredient== null) throw new IllegalArgumentException("Recipe Ingredient is null");
+        if(!recipeIngredients.contains(recipeIngredient)) throw new IllegalArgumentException("not found");
+        recipeIngredients.remove(recipeIngredient);
+        recipeIngredient.setRecipe(null);
     }
 
-    public int getId() {
+
+    public Integer getId() {
         return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getRecipeName() {
@@ -70,6 +94,7 @@ public class Recipe {
 
     public List<RecipeIngredient> getRecipeIngredients() {
         return recipeIngredients;
+
     }
 
     public void setRecipeIngredients(List<RecipeIngredient> recipeIngredients) {
@@ -88,34 +113,18 @@ public class Recipe {
         return categories;
     }
 
-    public void addCategory( RecipeCategory recipeCategory) {
+    public void addCategory(RecipeCategory recipeCategory) {
+        if (recipeCategory == null) throw new IllegalArgumentException("recipeCategory is null");
 
-        if (recipeCategory == null) throw new IllegalArgumentException("Category is null");
-
-        /*********** Add ************************/
-        if (categories == null) categories = new HashSet<>();
-
-        if (!categories.contains(recipeCategory))
-            recipeCategory.getRecipes().add(this);
         categories.add(recipeCategory);
+        recipeCategory.getRecipes().add(this);
     }
 
-    public void removeCategory( RecipeCategory recipeCategory){
+    public void removeRecipeCategory(RecipeCategory recipeCategory) {
+        if (recipeCategory == null) throw new IllegalArgumentException("recipeCategory is null");
 
-        if(recipeCategory == null) throw new IllegalArgumentException("Category is null");
-
-        /*********** Add ************************/
-        if(categories == null) categories = new HashSet<>();
-
-        if(categories.contains(recipeCategory))
-            recipeCategory.getRecipes().remove(this);
         categories.remove(recipeCategory);
-
-
-    }
-
-    public void setCategories(Set<RecipeCategory> categories) {
-        this.categories = categories;
+        recipeCategory.getRecipes().remove(this);
     }
 
     @Override
@@ -123,7 +132,7 @@ public class Recipe {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Recipe recipe = (Recipe) o;
-        return getId() == recipe.getId() && Objects.equals(getRecipeName(), recipe.getRecipeName());
+        return Objects.equals(getId(), recipe.getId()) && Objects.equals(getRecipeName(), recipe.getRecipeName());
     }
 
     @Override
@@ -136,7 +145,11 @@ public class Recipe {
         return "Recipe{" +
                 "id=" + id +
                 ", recipeName='" + recipeName + '\'' +
+                ", recipeIngredients=" + recipeIngredients +
                 ", recipeInstruction=" + recipeInstruction +
+                ", categories=" + categories +
                 '}';
     }
 }
+
+

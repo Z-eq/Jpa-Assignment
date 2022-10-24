@@ -1,26 +1,26 @@
 package zeq.se.lexicon.jpaassignment.entity;
 
-import org.hibernate.id.UUIDGenerator;
+import org.hibernate.annotations.GenericGenerator;
+
 
 import javax.persistence.*;
 import java.util.*;
-import java.util.UUID;
+
 
 @Entity
+@Table(name = "recipe_ingredient")
 public class RecipeIngredient {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "recipe_ingredient_id")
+@Id
+@GeneratedValue(strategy = GenerationType.IDENTITY)
 
     private Integer id;
-    @ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH} , fetch = FetchType.EAGER)
-   // @JoinColumn( name = "ingredient_id")
+    @ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH,} ,fetch = FetchType.EAGER)
+   @JoinColumn( name = "ingredient_id")
     private Ingredient ingredient;
 
-    // @Column(name=  "amount")
+     @Column(name=  "amount")
     private double amount;
-
 
     @Enumerated(EnumType.STRING)
     private Measurement measurement;
@@ -32,7 +32,31 @@ public class RecipeIngredient {
     public RecipeIngredient() {
     }
 
+    public RecipeIngredient(double amount, Measurement measurement) {
+        this.amount = amount;
+        this.measurement = measurement;
+    }
+
+    public RecipeIngredient(Ingredient ingredient, Measurement measurement) {
+        this.ingredient = ingredient;
+        this.measurement = measurement;
+    }
+
+    public RecipeIngredient(Ingredient ingredient, double amount, Measurement measurement) {
+        this.ingredient = ingredient;
+        this.amount = amount;
+        this.measurement = measurement;
+    }
+
     public RecipeIngredient(Ingredient ingredient, double amount, Measurement measurement, Recipe recipe) {
+        this.ingredient = ingredient;
+        this.amount = amount;
+        this.measurement = measurement;
+        this.recipe = recipe;
+    }
+
+    public RecipeIngredient(Integer id, Ingredient ingredient, double amount, Measurement measurement, Recipe recipe) {
+        this.id = id;
         this.ingredient = ingredient;
         this.amount = amount;
         this.measurement = measurement;
@@ -96,10 +120,8 @@ public class RecipeIngredient {
     public String toString() {
         return "RecipeIngredient{" +
                 "id=" + id +
-                ", ingredient=" + ingredient +
                 ", amount=" + amount +
                 ", measurement=" + measurement +
-                ", recipe=" + recipe +
                 '}';
     }
 }

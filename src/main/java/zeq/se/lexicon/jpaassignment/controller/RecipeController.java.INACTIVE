@@ -8,9 +8,10 @@ import zeq.se.lexicon.jpaassignment.entity.Recipe;
 import zeq.se.lexicon.jpaassignment.exeptions.RecipeNotFoundException;
 import zeq.se.lexicon.jpaassignment.repository.RecipeRepository;
 
+import java.text.AttributedString;
 import java.util.List;
 
-@CrossOrigin
+//@CrossOrigin
 @RestController
 public class RecipeController {
 
@@ -25,7 +26,8 @@ public class RecipeController {
     @GetMapping("/recipe")
     public List<Recipe> getAllRecipes() {
 
-        //model.addAttribute(new Recipe());
+
+        // model.addAttribute(new Recipe());
         return (List<Recipe>) recipeRepository.findAll();
     }
 

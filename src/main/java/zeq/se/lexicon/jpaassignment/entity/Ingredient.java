@@ -1,5 +1,6 @@
 package zeq.se.lexicon.jpaassignment.entity;
 
+import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;

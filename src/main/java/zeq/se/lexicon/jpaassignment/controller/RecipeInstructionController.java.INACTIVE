@@ -1,0 +1,60 @@
+package zeq.se.lexicon.jpaassignment.controller;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import zeq.se.lexicon.jpaassignment.entity.RecipeInstruction;
+import zeq.se.lexicon.jpaassignment.exeptions.RecipeNotFoundException;
+import zeq.se.lexicon.jpaassignment.repository.RecipeInstructionRepository;
+
+import java.util.List;
+
+@RestController
+public class RecipeInstructionController {
+
+    final
+    RecipeInstructionRepository recipeInstructionRepository;
+
+    public RecipeInstructionController(RecipeInstructionRepository recipeInstructionRepository) {
+        this.recipeInstructionRepository = recipeInstructionRepository;
+    }
+
+    //Get all recipes
+    @GetMapping("/instruction")
+    public List<RecipeInstruction> getAllRecipeInstructions() {
+
+        //model.addAttribute(new Recipe());
+        return (List<RecipeInstruction>) recipeInstructionRepository.findAll();
+    }
+
+    //Create new recipe
+    @PostMapping("/instruction")
+    public RecipeInstruction createRecipe(@RequestBody RecipeInstruction recipeInstruction) {
+
+        //model.addAttribute("recipe", new Recipe(ingredients, recipeTitle));
+        return recipeInstructionRepository.save(recipeInstruction);
+    }
+
+    // Get a single recipe
+    @GetMapping("/instruction/{id}")
+    public RecipeInstruction getRecipeById(@PathVariable(value = "id") Integer id) throws RecipeNotFoundException {
+        return recipeInstructionRepository.findById(id)
+                .orElseThrow(() -> new RecipeNotFoundException(id));
+    }
+
+    // Update a recipe
+
+    // Delete a recipe
+    @DeleteMapping("/instruction/{id}")
+    public ResponseEntity<?> deleteRecipe(@PathVariable(value = "id") Integer id) throws RecipeNotFoundException {
+        RecipeInstruction recipeInstruction = recipeInstructionRepository.findById(id)
+                .orElseThrow(() -> new RecipeNotFoundException(id));
+
+        recipeInstructionRepository.delete(recipeInstruction);
+
+        return ResponseEntity.ok().build();
+    }
+
+}
+
+
+
