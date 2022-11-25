@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import zeq.se.lexicon.jpaassignment.entity.*;
@@ -15,6 +16,7 @@ import java.util.*;
 
 @SpringBootApplication
 public class JpaAssignmentApplication {
+
 
     public static void main(String[] args) {
         SpringApplication.run(JpaAssignmentApplication.class, args);
@@ -56,11 +58,6 @@ public class JpaAssignmentApplication {
             recipeInstructionRepository.deleteAll();
 
 
-            /** Add Recipe's **/
-
-
-            Recipe pancake = recipeRepository.save(new Recipe("Pancakes"));
-
 
             /** Save ingredients **/
 
@@ -70,25 +67,38 @@ public class JpaAssignmentApplication {
             Ingredient Salt = ingredientRepository.save(new Ingredient("salt"));
 
 
-            /** RecipeIngredients And amounts **/
+            /** Recipe instruction **/
 
-            RecipeIngredient flour = new RecipeIngredient(Flour, 3, Measurement.DL);
-            RecipeIngredient milk = new RecipeIngredient(Milk, 6, Measurement.DL);
-            RecipeIngredient eggs = new RecipeIngredient(Salt, 3, Measurement.PCS);
-            RecipeIngredient salt = new RecipeIngredient(Salt, 0.5, Measurement.TBSP);
+            RecipeInstruction panCakes = new RecipeInstruction("Mix ingredients and steak on medium heat");
 
-            pancake.addRecipeIngredient(flour);
-            pancake.addRecipeIngredient(milk);
-            pancake.addRecipeIngredient(salt);
-            pancake.addRecipeIngredient(eggs);
-            entityManager.flush();
+            /** Category **/
 
+            RecipeCategory recipeCategory = new RecipeCategory("Hot breakfast");
 
-            flour.setIngredient(Flour);
-            milk.setIngredient(Milk);
-            eggs.setIngredient(Eggs);
-            salt.setIngredient(Salt);
-            entityManager.flush();
+            /** Add Recipe's **/
+            Recipe pancake = recipeRepository.save(new Recipe("Pancakes", panCakes));
+
+//        // pancake.addCategory((recipeCategory));
+//
+//            /** RecipeIngredients And amounts **/
+//
+//            RecipeIngredient flour = new RecipeIngredient(Flour, 3, Measurement.DL);
+//            RecipeIngredient milk = new RecipeIngredient(Milk, 6, Measurement.DL);
+//            RecipeIngredient eggs = new RecipeIngredient(Salt, 3, Measurement.PCS);
+//            RecipeIngredient salt = new RecipeIngredient(Salt, 0.5, Measurement.TBSP);
+//
+//            pancake.addRecipeIngredient(flour);
+//            pancake.addRecipeIngredient(milk);
+//            pancake.addRecipeIngredient(salt);
+//            pancake.addRecipeIngredient(eggs);
+//            entityManager.flush();
+//
+//
+//            flour.setIngredient(Flour);
+//            milk.setIngredient(Milk);
+//            eggs.setIngredient(Eggs);
+//            salt.setIngredient(Salt);
+//            entityManager.flush();
 
             recipeRepository.findRecipesByRecipeIngredientsIngredientIngredientName("egg").forEach(System.out::println);
 

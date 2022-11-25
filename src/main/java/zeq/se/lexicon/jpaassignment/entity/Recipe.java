@@ -62,15 +62,16 @@ public class Recipe {
         this.categories = categories;
     }
 
-    public void addRecipeIngredient(RecipeIngredient recipeIngredient ){
-        if(recipeIngredient== null) throw new IllegalArgumentException("Recipe Ingredient is null");
-        if(recipeIngredients== null) recipeIngredients= new ArrayList<>();
+    public void addRecipeIngredient(RecipeIngredient recipeIngredient) {
+        if (recipeIngredient == null) throw new IllegalArgumentException("Recipe Ingredient is null");
+        if (recipeIngredients == null) recipeIngredients = new ArrayList<>();
         recipeIngredients.add(recipeIngredient);
         recipeIngredient.setRecipe(this);
     }
-    public void removeRecipeIngredient(RecipeIngredient recipeIngredient){
-        if(recipeIngredient== null) throw new IllegalArgumentException("Recipe Ingredient is null");
-        if(!recipeIngredients.contains(recipeIngredient)) throw new IllegalArgumentException("not found");
+
+    public void removeRecipeIngredient(RecipeIngredient recipeIngredient) {
+        if (recipeIngredient == null) throw new IllegalArgumentException("Recipe Ingredient is null");
+        if (!recipeIngredients.contains(recipeIngredient)) throw new IllegalArgumentException("not found");
         recipeIngredients.remove(recipeIngredient);
         recipeIngredient.setRecipe(null);
     }
@@ -111,23 +112,26 @@ public class Recipe {
 
     public Set<RecipeCategory> getCategories() {
         return categories;
-    }
+
+            }
 
     public void addCategory(RecipeCategory recipeCategory) {
-        if (recipeCategory == null) throw new IllegalArgumentException("recipeCategory is null");
 
-        categories.add(recipeCategory);
-        recipeCategory.getRecipes().add(this);
+        if (recipeCategory == null) throw new IllegalArgumentException("null");
+        if (categories == null)
+            categories = new HashSet<>();
+        if (!categories.contains(recipeCategory)) {
+            categories.add(recipeCategory);
+        }
     }
 
-    public void removeRecipeCategory(RecipeCategory recipeCategory) {
-        if (recipeCategory == null) throw new IllegalArgumentException("recipeCategory is null");
-
-        categories.remove(recipeCategory);
-        recipeCategory.getRecipes().remove(this);
+    public void removeCategory(RecipeCategory recipeCategory) {
+        if (categories.contains(recipeCategory)) {
+            categories.remove(recipeCategory);
+        }
     }
 
-    @Override
+        @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

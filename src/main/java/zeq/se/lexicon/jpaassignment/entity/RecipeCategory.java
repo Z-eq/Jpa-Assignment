@@ -1,9 +1,7 @@
 package zeq.se.lexicon.jpaassignment.entity;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 
@@ -20,6 +18,7 @@ public class RecipeCategory {
 
     public RecipeCategory() {
     }
+
 
     public RecipeCategory(String category) {
         this.category = category;

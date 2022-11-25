@@ -3,6 +3,7 @@ package zeq.se.lexicon.jpaassignment.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 import zeq.se.lexicon.jpaassignment.entity.Ingredient;
 
@@ -22,12 +23,12 @@ public interface IngredientRepository extends JpaRepository<Ingredient, Integer>
                      * Delete by name
                      **/
     void deleteByIngredientName(String ingredientName);
-    @Query("select i from Ingredient i where upper(i.ingredientName) = upper(?1)")
-    List<Ingredient> findByIngredientNameIgnoreCase(String ingredientName);
+   @Query("select i from Ingredient i where upper(i.ingredientName) = upper(?1)")
+  List<Ingredient> findByIngredientNameIgnoreCase (@Param("name") String name);
 
                     /** Find by contains **/
 
-    List<Ingredient> findByIngredientNameContainingIgnoreCase(String ingredientName);
+   List<Ingredient> findByIngredientNameContainingIgnoreCase(String ingredientName);
 
     @Transactional
     @Modifying
@@ -36,10 +37,4 @@ public interface IngredientRepository extends JpaRepository<Ingredient, Integer>
 
     void updateIdByIngredientName(Integer id, String ingredientName);
 
-
-
-
-
-    
-    
 }
